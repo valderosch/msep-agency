@@ -1,39 +1,20 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const connectDB = require('./config/db');
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
+const emailRoutes = require('./routes/emailRoutes');
+const corsMiddleware = require('./middleware/corsMiddleware');
+const bodyParserMiddleware = require('./middleware/bodyParserMiddleware');
+require('./actions/emailAction');
+
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
+app.use(corsMiddleware);
+app.use(bodyParserMiddleware);
 
-// Route to send email
-app.post('/send', (req, res) => {
-    const { to, subject, text } = req.body;
+connectDB();
 
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'your-email@gmail.com',
-            pass: 'your-email-password',
-        },
-    });
-
-    const mailOptions = {
-        from: 'your-email@gmail.com',
-        to: to,
-        subject: subject,
-        text: text,
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return res.status(500).send(error.toString());
-        }
-        res.status(200).send('Email sent: ' + info.response);
-    });
-});
+app.use('/mail', subscriptionRoutes);
+app.use('/mail', emailRoutes);
 
 const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => {
