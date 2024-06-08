@@ -10,7 +10,7 @@ const connectDB = async () => {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        console.log('MAILER | MongoDB connected successfully | 200 ');
+        console.log('SERVER | MongoDB connected successfully | 200 ');
     } catch (err) {
         console.error(err.message);
         process.exit(1);
@@ -18,4 +18,3 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
-
