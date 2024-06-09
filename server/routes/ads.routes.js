@@ -4,8 +4,8 @@ const adsController = require('../controllers/adsController');
 
 const router = new Router();
 
-router.post('/subscribe/new', authMiddleware,  adsController.makeNewSubscription);
+router.post('/subscribe/new', authMiddleware, adsController.makeNewSubscription);
 router.delete('/subscribe/delete', authMiddleware, adsController.deleteSubscription);
-router.post('/calculate', authMiddleware,);
+router.post('/calculate', authMiddleware, adsController.calculateAdsCosts);
 
 module.exports = router;

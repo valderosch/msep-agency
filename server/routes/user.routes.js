@@ -1,11 +1,9 @@
 const Router = require('express');
-const authMiddleware = require('../middleware/auth.middleware');
+const authMiddleware = require('../middleware/authMiddleware');
 const userController = require('../controllers/userController');
 
 const router = new Router();
 
-router.post('/avatar', authMiddleware, userController.uploadAvatar );
-router.delete('/avatar', authMiddleware, userController.deleteAvatar);
-router.patch('/email', authMiddleware, userController.editUserEmail);
+router.patch('/edit', authMiddleware, userController.editUser);
 
 module.exports = router;
