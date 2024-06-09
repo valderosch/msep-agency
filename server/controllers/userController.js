@@ -1,61 +1,27 @@
-const User = require("../models/User");
-const UUid = require("uuid");
-const config = require("config");
-const fs = require("fs");
+const User = require("../models/user");
 
+class UserController {
 
-class userController {
-    async uploadAvatar(request, response){
-        try{
-            const file = request.files.file
-            const user = await User.findById(request.user.id);
-            const avatarFileName = UUid.v4() + '.jpg';
-            file.mv(`${config.get('staticPath')}\\${avatarFileName}`);
-            user.avatar = avatarFileName;
-            await user.save();
-            return response.json(user);
-        } catch (e) {
-            console.log(e);
-            return response.status(500).json({
-                message: "SERVER | Error while [uploading] avatar"
-            });
-        }
-    }
-
-    async deleteAvatar(request, response){
-        try{
-            const user = await User.findById(request.user.id);
-            fs.unlinkSync(`${config.get('staticPath')}\\${user.avatar}`);
-            user.avatar = null;
-
-            await user.save();
-            return response.json(user);
-        } catch (e) {
-            console.log(e);
-            return response.status(500).json({
-                message: "SERVER | Error while [deleting] avatar"
-            });
-        }
-    }
-
-    async editUserEmail(request, response) {
+    async editUser(req, res) {
         try {
-            const user = await User.findById(request.user.id);
-            if(request.email === user.email){
-                return response.json({
-                    message: "SERVER | This E-mail is assigned already"
-                });
+            const user = await User.findById(req.user.id);
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
             }
-            user.email = request.email;
+
+            const { email, password } = req.body;
+            if (email) user.email = email;
+            if (password) user.password = await bcrypt.hash(password, 5);
+
             await user.save();
-            return response.json(user);
-        }
-        catch (e) {
-            return response.status(500).json({
-                message: "SERVER | Error while [editing] Email"
+            return res.json(user);
+        } catch (e) {
+            console.log(e);
+            return res.status(500).json({
+                message: "SERVER | Error while [editing] user"
             });
         }
     }
 }
 
-module.exports = new userController();
+module.exports = new UserController();

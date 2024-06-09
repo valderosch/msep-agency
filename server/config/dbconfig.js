@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const configPath = path.join(__dirname, 'db.json');
+const configPath = path.join(__dirname, 'default.json');
 const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 
 const connectDB = async () => {
