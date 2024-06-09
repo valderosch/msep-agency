@@ -28,4 +28,11 @@ def solve_system(omega, beta, alpha, lambda0, lambda1, Q_max, Q0, T1, T2, T, c0)
 def get_results(sol, T):
     t = np.linspace(0, T, 300)
     S, R = sol.sol(t)
-    return t, S, R
+    optimal_time, optimal_S = find_optimal_time(t, S)
+    return t, S, R, optimal_time, optimal_S
+
+def find_optimal_time(t, S):
+    max_S_index = np.argmax(S)
+    optimal_time = t[max_S_index]
+    optimal_S = S[max_S_index]
+    return optimal_time, optimal_S
